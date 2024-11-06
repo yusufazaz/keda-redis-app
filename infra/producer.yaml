@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-producer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-producer
+  template:
+    metadata:
+      labels:
+        app: task-producer
+    spec:
+      containers:
+      - name: task-producer
+        image: docker.io/yusufazaz/keda-redis-app:stable
+        ports:
+        - containerPort: 8080
+        env:
+        - name: spring.data.redis.host
+          value: redis
+        - name: spring.profiles.active
+          value: default,producer
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: task-producer-svc
+spec:
+  selector:
+    app: task-producer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080

@@ -1,0 +1,32 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: worker-scaler
+  namespace: default
+spec:
+  jobTargetRef:
+    template:
+      spec:
+        containers:
+        - name: keda-redis-worker
+          image: docker.io/yusufazaz/keda-redis-app:stable
+          imagePullPolicy: Always
+          env:
+          - name: spring.data.redis.host
+            value: redis
+          - name: spring.profiles.active
+            value: default,worker
+          - name: spring.main.web-application-type
+            value: none            
+        restartPolicy: Never
+    backoffLimit: 4  
+  pollingInterval: 10             # Optional. Default: 30 seconds
+  maxReplicaCount: 3             # Optional. Default: 100
+  successfulJobsHistoryLimit: 3   # Optional. Default: 100. How many completed jobs should be kept.
+  failedJobsHistoryLimit: 3       # Optional. Default: 100. How many failed jobs should be kept.
+  triggers:
+  - type: redis
+    metadata:
+      address: redis.default.svc.cluster.local:6379
+      listName: task-queue
+      listLength: "1"
