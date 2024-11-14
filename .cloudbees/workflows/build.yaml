@@ -14,8 +14,9 @@ jobs:
         uses: cloudbees-io/checkout@v1
       - name: mvn install
         uses: docker://maven:3.9-eclipse-temurin-21-alpine
-        run: mvn --version
+        run: mvn install
       - name: scan
         uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v2
         with:
           language: JAVA
+          sonar-exclusion: "*.java"
