@@ -19,4 +19,4 @@ jobs:
         uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v2
         with:
           language: JAVA
-          sonar-exclusion: "*.java"
+          sonar.exclusions: "**/src/main/java/**,**/src/test/java/**"
