@@ -15,6 +15,9 @@ jobs:
       - name: mvn install
         uses: docker://maven:3.9-eclipse-temurin-21-alpine
         run: mvn install
+      - name: unit-test
+        uses: docker://maven:3.9-eclipse-temurin-21-alpine
+        run: mvn test
       - name: scan
         uses: cloudbees-io/sonarqube-bundled-sast-scan-code@v2
         with:
